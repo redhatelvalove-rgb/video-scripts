@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>短影音腳本審核系統｜大興・骨立・華榮 聯合醫療</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --teal: #1a7a6e;
+  --teal-2: #2d9e8f;
+  --teal-3: #e8f4f2;
+  --teal-4: #b2ddd8;
+  --teal-dark: #0f5248;
+  --ink: #1a1e1e;
+  --ink-2: #3a4040;
+  --ink-3: #6a7070;
+  --border: #e0ddd8;
+  --border-2: #f0ede8;
+  --bg: #f6f5f2;
+  --white: #ffffff;
+  --gold: #b8962e;
+  --gold-2: #fdf8ee;
+  --ok: #1e7a4a;
+  --ok-2: #edf7f2;
+  --ok-3: #a8d8bc;
+  --warn: #9a6010;
+  --warn-2: #fdf6e8;
+  --warn-3: #e8c070;
+  --err: #9a2810;
+  --err-2: #fdf0ec;
+  --err-3: #e8a890;
+  --front-color: #7a4810;
+  --front-bg: #fdf8f2;
+  --front-border: #e8c898;
+  --mid-color: #1a4a7a;
+  --mid-bg: #f2f6fd;
+  --mid-border: #98b8e0;
+  --end-color: #1a6a3a;
+  --end-bg: #f2fdf6;
+  --end-border: #98d8b0;
+  --comment-bg: #fffbf0;
+  --comment-border: #e8d898;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ─── HOMEPAGE ─── */
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 48px;
+}
+.home-header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+.home-brand {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--teal-2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.home-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.home-subtitle {
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.home-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-2);
+}
+.home-meta-item {
+  font-size: 12px;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.home-meta-item strong { color: var(--ink-2); font-weight: 600; }
+
+.home-body {
+  flex: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px;
+  width: 100%;
+}
+
+.home-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 20px;
+}
+
+.doctor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.doctor-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.doctor-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--teal);
+  transform: scaleX(0);
+  transition: transform 0.2s;
+  transform-origin: left;
+}
+.doctor-card:hover { border-color: var(--teal-4); box-shadow: 0 4px 20px rgba(26,122,110,0.08); }
+.doctor-card:hover::before { transform: scaleX(1); }
+
+.doctor-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--teal-3);
+  border: 2px solid var(--teal-4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--teal-dark);
+  margin-bottom: 14px;
+}
+.doctor-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.doctor-clinic {
+  font-size: 12px;
+  color: var(--teal-2);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.doctor-scripts-count {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+}
+.doctor-script-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.doctor-script-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--teal-3);
+  border: 1px solid var(--teal-4);
+  color: var(--teal-dark);
+  border-radius: 4px;
+}
+.doctor-enter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-2);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal);
+}
+
+.home-notice {
+  margin-top: 32px;
+  background: var(--gold-2);
+  border: 1px solid var(--warn-3);
+  border-left: 3px solid var(--gold);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--warn);
+  line-height: 1.7;
+}
+
+/* ─── REVIEW PAGE ─── */
+.review-page { display: none; min-height: 100vh; flex-direction: column; }
+
+/* TOP BAR */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--ink-3); cursor: pointer;
+  padding: 6px 10px; border-radius: 5px;
+  transition: all 0.15s;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.back-btn:hover { background: var(--bg); color: var(--ink); }
+.topbar-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.topbar-doctor {
+  font-size: 11px;
+  color: var(--teal-2);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+.topbar-right { display: flex; align-items: center; gap: 20px; }
+.progress-wrap {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; color: var(--ink-3);
+}
+.progress-bar {
+  width: 120px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 2px;
+  transition: width 0.4s;
+}
+
+/* LAYOUT */
+.review-layout { display: flex; flex: 1; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  padding: 16px 0;
+}
+.sidebar-section { padding: 0 14px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-3); }
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+  text-decoration: none;
+  color: var(--ink-3);
+}
+.nav-item:hover { background: var(--teal-3); color: var(--teal); }
+.nav-item.active { border-left-color: var(--teal); background: var(--teal-3); color: var(--teal); font-weight: 600; }
+.nav-ep { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: var(--teal-2); background: var(--teal-3); padding: 1px 5px; border-radius: 3px; flex-shrink: 0; }
+.nav-label { font-size: 11px; line-height: 1.35; flex: 1; }
+.nav-status { font-size: 12px; flex-shrink: 0; }
+
+/* MAIN */
+.main-content { flex: 1; padding: 28px 36px; min-width: 0; }
+
+/* SUMMARY BAR */
+.summary-bar {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.summary-stats { display: flex; gap: 24px; }
+.stat-item { text-align: center; }
+.stat-num { font-size: 22px; font-weight: 700; font-family: 'Noto Serif TC', serif; line-height: 1; }
+.stat-label { font-size: 10px; color: var(--ink-3); margin-top: 2px; letter-spacing: 0.05em; }
+.stat-ok .stat-num { color: var(--ok); }
+.stat-warn .stat-num { color: var(--warn); }
+.stat-err .stat-num { color: var(--err); }
+.stat-divider { width: 1px; background: var(--border); }
+
+/* SCRIPT CARD */
+.script-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  scroll-margin-top: 68px;
+}
+
+/* CARD HEADER */
+.card-head {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.card-head-left {}
+.card-ep-badge {
+  display: inline-block;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--teal-2); background: var(--teal-3);
+  border: 1px solid var(--teal-4);
+  padding: 2px 8px; border-radius: 4px;
+  margin-bottom: 6px;
+}
+.card-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 17px; font-weight: 700;
+  color: var(--ink); line-height: 1.4;
+  margin-bottom: 10px;
+}
+.card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.card-tag {
+  font-size: 11px; padding: 2px 8px;
+  border: 1px solid var(--border);
+  color: var(--ink-2); border-radius: 20px;
+  background: var(--bg);
+}
+.card-verdict {
+  flex-shrink: 0;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 14px; border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--ink-3); background: var(--bg);
+  white-space: nowrap; align-self: flex-start;
+  transition: all 0.2s;
+}
+.card-verdict.pass { background: var(--ok-2); border-color: var(--ok-3); color: var(--ok); }
+.card-verdict.revise { background: var(--warn-2); border-color: var(--warn-3); color: var(--warn); }
+.card-verdict.reject { background: var(--err-2); border-color: var(--err-3); color: var(--err); }
+
+/* SCRIPT TABLE */
+.script-section-wrap { border-bottom: 1px solid var(--border-2); }
+
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border-2);
+  cursor: pointer;
+  user-select: none;
+}
+.section-pip {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.front-pip { background: var(--front-color); }
+.mid-pip { background: var(--mid-color); }
+.end-pip { background: var(--end-color); }
+
+.section-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.front-title { color: var(--front-color); }
+.mid-title { color: var(--mid-color); }
+.end-title { color: var(--end-color); }
+
+.section-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--ink-3);
+  background: var(--bg); padding: 2px 8px;
+  border-radius: 4px; border: 1px solid var(--border);
+}
+.section-comment-count {
+  margin-left: auto;
+  font-size: 10px; color: var(--ink-3);
+}
+
+/* BREAKDOWN TABLE */
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.breakdown-table thead tr {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.breakdown-table th {
+  padding: 8px 12px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); text-align: left;
+}
+.th-timecode { width: 64px; }
+.th-visual { width: 140px; }
+.th-line { }
+.th-sec { width: 48px; text-align: right; }
+.th-comment { width: 36px; }
+
+.breakdown-table tbody tr {
+  border-bottom: 1px solid var(--border-2);
+  transition: background 0.1s;
+}
+.breakdown-table tbody tr:last-child { border-bottom: none; }
+.breakdown-table tbody tr:hover { background: #fafaf8; }
+.breakdown-table tbody tr.section-divider td {
+  padding: 6px 12px;
+  background: var(--bg);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.td-timecode {
+  padding: 10px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--teal-2);
+  font-weight: 500; white-space: nowrap;
+  vertical-align: top;
+}
+.td-visual {
+  padding: 10px 12px;
+  font-size: 11px; color: var(--ink-3);
+  vertical-align: top;
+}
+.visual-tag {
+  display: inline-block;
+  font-size: 10px; padding: 1px 6px;
+  border-radius: 3px; border: 1px solid;
+}
+.vtag-doctor { background: var(--teal-3); border-color: var(--teal-4); color: var(--teal-dark); }
+.vtag-hidden { background: #f0f0f0; border-color: #d0d0d0; color: #555; }
+.vtag-pause { background: #f8f8f0; border-color: #e0e0a0; color: #666; }
+.vtag-card { background: var(--gold-2); border-color: var(--warn-3); color: var(--warn); }
+.vtag-note { background: var(--teal-3); border-color: var(--teal-4); color: var(--teal-dark); font-style: italic; }
+
+.td-line {
+  padding: 10px 12px;
+  font-size: 13px; color: var(--ink-2);
+  line-height: 1.6; vertical-align: top;
+}
+.line-hidden { color: var(--ink-3); font-style: italic; }
+.line-note { color: var(--teal-2); font-size: 12px; }
+.td-sec {
+  padding: 10px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--ink-3);
+  text-align: right; vertical-align: top; white-space: nowrap;
+}
+.td-comment-btn {
+  padding: 10px 8px;
+  vertical-align: top; text-align: center;
+}
+.comment-trigger {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--ink-3);
+  cursor: pointer;
+  font-size: 11px;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.comment-trigger:hover { border-color: var(--teal-4); background: var(--teal-3); color: var(--teal); }
+.comment-trigger.has-comment { background: var(--comment-bg); border-color: var(--comment-border); color: var(--gold); }
+
+/* INLINE COMMENT */
+.inline-comment-row { display: none; }
+.inline-comment-row.open { display: table-row; }
+.inline-comment-cell {
+  padding: 0 12px 12px 60px;
+  background: var(--comment-bg);
+  border-bottom: 1px solid var(--comment-border);
+}
+.inline-comment-inner {
+  border: 1px solid var(--comment-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--white);
+}
+.inline-comment-label {
+  padding: 6px 10px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--warn); background: var(--warn-2);
+  border-bottom: 1px solid var(--comment-border);
+}
+.inline-comment-field {
+  width: 100%; border: none;
+  padding: 8px 10px;
+  font-size: 12px; font-family: 'Noto Sans TC', sans-serif;
+  color: var(--ink); background: var(--white);
+  resize: none; outline: none; min-height: 56px;
+}
+
+/* SECTION COMMENT */
+.section-comment-area {
+  padding: 14px 24px;
+  background: var(--comment-bg);
+  border-top: 1px dashed var(--comment-border);
+}
+.section-comment-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--warn); margin-bottom: 6px;
+}
+.section-comment-field {
+  width: 100%; border: 1px solid var(--comment-border);
+  border-radius: 6px; padding: 8px 12px;
+  font-size: 12px; font-family: 'Noto Sans TC', sans-serif;
+  color: var(--ink); background: var(--white);
+  resize: none; outline: none; min-height: 56px;
+  transition: border-color 0.15s;
+}
+.section-comment-field:focus { border-color: var(--gold); }
+
+/* END CARD */
+.end-card-section {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--teal-3);
+}
+.end-card-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--teal-2); margin-bottom: 8px;
+}
+.end-card-content {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px; color: var(--teal-dark);
+  font-weight: 500; line-height: 1.7;
+  white-space: pre-line;
+}
+
+/* COMPLIANCE */
+.compliance-section {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+.compliance-title {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 10px;
+}
+.compliance-list { display: flex; flex-direction: column; gap: 4px; }
+.compliance-item {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 12px; padding: 5px 0;
+  border-bottom: 1px solid var(--border-2);
+}
+.compliance-item:last-child { border-bottom: none; }
+.compliance-icon { font-size: 13px; flex-shrink: 0; }
+.compliance-text { color: var(--ink-2); flex: 1; }
+.compliance-note { color: var(--ink-3); font-size: 11px; }
+
+/* VERDICT */
+.verdict-section {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.verdict-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 14px;
+}
+.verdict-choices { display: flex; gap: 10px; margin-bottom: 14px; }
+.verdict-choice {
+  flex: 1; padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px; background: var(--white);
+  cursor: pointer; transition: all 0.15s;
+  text-align: center;
+}
+.verdict-choice:hover { border-color: var(--teal-4); }
+.verdict-choice.sel-pass { border-color: var(--ok-3); background: var(--ok-2); }
+.verdict-choice.sel-revise { border-color: var(--warn-3); background: var(--warn-2); }
+.verdict-choice.sel-reject { border-color: var(--err-3); background: var(--err-2); }
+.verdict-choice-icon { font-size: 18px; margin-bottom: 4px; }
+.verdict-choice-label { font-size: 12px; font-weight: 700; }
+.sel-pass .verdict-choice-label { color: var(--ok); }
+.sel-revise .verdict-choice-label { color: var(--warn); }
+.sel-reject .verdict-choice-label { color: var(--err); }
+.verdict-choice-sub { font-size: 10px; color: var(--ink-3); margin-top: 2px; }
+
+.verdict-submit {
+  display: flex; align-items: center; gap: 12px;
+}
+.submit-btn {
+  padding: 9px 22px;
+  background: var(--teal); color: var(--white);
+  border: none; border-radius: 6px;
+  font-size: 13px; font-weight: 700;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer; transition: background 0.15s;
+}
+.submit-btn:hover { background: var(--teal-dark); }
+.submit-btn:disabled { background: #bbb; cursor: default; }
+.submit-confirm {
+  display: none; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600;
+  padding: 8px 14px; border-radius: 6px;
+}
+.submit-confirm.pass { background: var(--ok-2); color: var(--ok); border: 1px solid var(--ok-3); }
+.submit-confirm.revise { background: var(--warn-2); color: var(--warn); border: 1px solid var(--warn-3); }
+.submit-confirm.reject { background: var(--err-2); color: var(--err); border: 1px solid var(--err-3); }
+
+/* FLOATING REPORT BUTTON */
+.float-report-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 500;
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 13px 20px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 14px; font-weight: 700;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(26,122,110,0.35);
+  transition: all 0.2s;
+}
+.float-report-btn:hover { background: var(--teal-dark); transform: translateY(-2px); }
+.float-report-btn.visible { display: flex; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ─── MOBILE CARD VIEW ─── */
+.script-row-card { display: none; }
+
+@media (max-width: 800px) {
+  .sidebar { display: none; }
+  .main-content { padding: 12px; }
+  .doctor-grid { grid-template-columns: 1fr; }
+  .verdict-choices { flex-direction: column; }
+  .summary-bar { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .card-head { flex-direction: column; gap: 10px; }
+  .card-verdict { align-self: flex-start; }
+  .section-header { padding: 10px 14px; }
+  .section-comment-area { padding: 12px 14px; }
+  .end-card-section { padding: 14px; }
+  .compliance-section { padding: 14px; }
+  .verdict-section { padding: 14px; }
+
+  /* Hide table on mobile, show cards */
+  .breakdown-table { display: none; }
+  .script-row-card { display: block; }
+
+  .row-card {
+    border-bottom: 1px solid var(--border-2);
+    padding: 12px 14px;
+    background: var(--white);
+  }
+  .row-card:last-child { border-bottom: none; }
+  .row-card-meta {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .row-card-tc {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; color: var(--teal-2); font-weight: 500;
+    background: var(--teal-3); padding: 2px 7px;
+    border-radius: 4px; border: 1px solid var(--teal-4);
+  }
+  .row-card-sec {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; color: var(--ink-3); margin-left: auto;
+  }
+  .row-card-line {
+    font-size: 14px; color: var(--ink-2);
+    line-height: 1.8; margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .row-card-line.line-hidden { color: var(--ink-3); font-style: italic; }
+  .row-card-line.line-note { color: var(--teal-2); font-size: 13px; }
+  .row-card-comment-btn {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--ink-3); cursor: pointer;
+    padding: 5px 10px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--bg);
+    transition: all 0.15s;
+  }
+  .row-card-comment-btn:hover { border-color: var(--teal-4); background: var(--teal-3); color: var(--teal); }
+  .row-card-comment-btn.has-comment { background: var(--comment-bg); border-color: var(--comment-border); color: var(--gold); }
+  .row-card-comment-area { display: none; margin-top: 10px; }
+  .row-card-comment-area.open { display: block; }
+  .row-card-comment-inner {
+    border: 1px solid var(--comment-border);
+    border-radius: 6px; overflow: hidden; background: var(--white);
+  }
+  .row-card-comment-label {
+    padding: 5px 10px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--warn); background: var(--warn-2);
+    border-bottom: 1px solid var(--comment-border);
+  }
+  .row-card-comment-field {
+    width: 100%; border: none; padding: 8px 10px;
+    font-size: 13px; font-family: "Noto Sans TC", sans-serif;
+    color: var(--ink); background: var(--white);
+    resize: none; outline: none; min-height: 60px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HOMEPAGE ═══════════════ -->
+<div class="homepage" id="homepage">
+  <div class="home-header">
+    <div class="home-header-inner">
+      <div class="home-brand">大興・骨立・華榮 聯合醫療</div>
+      <div class="home-title">短影音腳本<br>醫師審核系統</div>
+      <div class="home-subtitle">請選擇您的姓名，進入個人腳本審核頁面</div>
+      <div class="home-meta">
+        <div class="home-meta-item">📋 <strong>腳本總數</strong> 10支</div>
+        <div class="home-meta-item">⏱ <strong>每支時長</strong> 60秒</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-body">
+    <div class="home-section-label">請選擇您的姓名</div>
+    <div class="doctor-grid" id="doctor-grid"></div>
+    <div class="home-notice">
+      ⚠️ 審核說明：每支腳本可逐行留下批注，或於各段落填寫整體意見。審核完成後請點選底部「Pass / Revise / Reject」提交。
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ REVIEW PAGE ═══════════════ -->
+<div class="review-page" id="review-page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="goHome()">← 返回</button>
+      <div>
+        <div class="topbar-title" id="topbar-title">腳本審核</div>
+        <div class="topbar-doctor" id="topbar-doctor"></div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="progress-wrap">
+        <span id="progress-text">已完成 0 / 0</span>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="review-layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-section" style="margin-bottom:8px">腳本列表</div>
+      <div id="nav-list"></div>
+    </nav>
+    <main class="main-content">
+      <div class="summary-bar">
+        <div class="summary-stats">
+          <div class="stat-item stat-ok"><div class="stat-num" id="stat-pass">0</div><div class="stat-label">PASS</div></div>
+          <div class="stat-divider"></div>
+          <div class="stat-item stat-warn"><div class="stat-num" id="stat-revise">0</div><div class="stat-label">REVISE</div></div>
+          <div class="stat-divider"></div>
+          <div class="stat-item stat-err"><div class="stat-num" id="stat-reject">0</div><div class="stat-label">REJECT</div></div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-3);text-align:right">
+          <div id="summary-doctor-name" style="font-weight:600;color:var(--ink-2);margin-bottom:2px"></div>
+          大興・骨立・華榮 聯合醫療
+        </div>
+      </div>
+      <div id="scripts-container"></div>
+    </main>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───
+const doctors = [
+  {
+    id: 'huang', name: '黃暉程醫師', clinic: '大興骨科', clinicFull: '大興骨科（高雄三民）',
+    avatar: '黃', scripts: ['EP04'],
+    scriptTitles: ['骨鬆是老人病？']
+  },
+  {
+    id: 'wu', name: '吳瑾俐醫師', clinic: '大興骨科', clinicFull: '大興骨科（高雄三民）',
+    avatar: '吳', scripts: ['EP06','EP08'],
+    scriptTitles: ['軟組織慢性疼痛','五十肩年輕人也中']
+  },
+  {
+    id: 'zhou', name: '周世祥醫師', clinic: '華榮骨科', clinicFull: '華榮骨科（高雄鼓山）',
+    avatar: '周', scripts: ['EP02','EP03'],
+    scriptTitles: ['下背痛久坐問題','膝蓋痛自我檢測']
+  },
+  {
+    id: 'shen', name: '沈煜庭醫師', clinic: '華榮骨科', clinicFull: '華榮骨科（高雄鼓山）',
+    avatar: '沈', scripts: ['EP01','EP05','EP07','EP09','EP10'],
+    scriptTitles: ['腳踝習慣性扭傷','骨髓血BMA注射','PRP迷思破解','網球肘','頸椎肩頸痠痛']
+  }
+];
+
+const allScripts = [
+  {
+    id:'EP01', title:'腳踝翻船自然好？小心釀成習慣性扭傷',
+    doctor:'沈煜庭醫師', clinic:'華榮骨科（高雄鼓山）', style:'問題式開場',
+    endCard:'來華榮 為你的疼痛解鎖\n華榮骨科 沈煜庭醫師',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'全程以「評估」「討論」框架帶出'},
+      {status:'ok',text:'無比較性語句',note:'未提及其他診所或療法比較'},
+      {status:'ok',text:'超音波說明',note:'以「評估參考」帶出，非診斷宣稱'},
+      {status:'warn',text:'醫師請確認',note:'臨床描述是否符合實際門診說法'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:03', rows:[
+        {tc:'00:00', visual:'doctor', line:'（手拿超音波探頭，直視鏡頭）「腳踝扭傷休息就會好？這就是為什麼你反覆扭傷的原因！」', sec:'3"'}
+      ]},
+      { type:'mid', timeRange:'00:03–00:55', rows:[
+        {tc:'00:03', visual:'hidden', line:'（藏鏡人，困惑音）「醫師，我走路還行，有這麼嚴重嗎？」', sec:'4"'},
+        {tc:'00:07', visual:'doctor', line:'「痛會消，但韌帶不會自己變緊。沒處理好的韌帶就像鬆掉的鬆緊帶，腳踝穩不住，當然會反覆翻船！」', sec:'8"'},
+        {tc:'00:15', visual:'doctor', line:'（畫面特寫超音波螢幕）「我都習慣用超音波直接看韌帶結構。很多人以為沒腫沒瘀青就沒事，但超音波看到的，往往跟你想的不一樣。」', sec:'10"'},
+        {tc:'00:25', visual:'doctor', line:'「根據韌帶的狀況，我們會討論適合的選項——輕微的可以從運動治療開始，嚴重一點的，增生療法可以幫助韌帶重建強度。」', sec:'10"'},
+        {tc:'00:35', visual:'doctor', line:'「很多人扭傷後沒有好好處理，腳踝就從一次變兩次、兩次變三次。」', sec:'6"'},
+        {tc:'00:41', visual:'doctor', line:'「這不是你不小心，是韌帶的支撐力已經不夠了。越早評估，能做的事越多。」', sec:'7"'}
+      ]},
+      { type:'end', timeRange:'00:55–01:00', rows:[
+        {tc:'00:55', visual:'doctor', line:'「腳踝扭傷不可怕，怕的是你『以為』好了。」', sec:'3"'},
+        {tc:'00:58', visual:'card', line:'【結尾字卡】來華榮 為你的疼痛解鎖｜華榮骨科 沈煜庭醫師', sec:'2"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP02', title:'下背痛：你每天坐幾個小時？',
+    doctor:'周世祥醫師', clinic:'華榮骨科（高雄鼓山）', style:'醫師獨白・生活感',
+    endCard:'華榮骨科 周世祥醫師｜高雄鼓山・PRP 再生注射・體外震波',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'全程觀念教育，無療效語句'},
+      {status:'ok',text:'文獻依據',note:'「連續30分鐘=久坐」有WHO文獻支持'},
+      {status:'ok',text:'軟骨機制說明',note:'「靠動獲得營養」屬衛教知識'},
+      {status:'warn',text:'醫師請確認',note:'「軟骨靠動獲得營養」是否符合您的臨床描述習慣'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:05', rows:[
+        {tc:'00:00', visual:'doctor', line:'「別動！你現在這姿勢，坐多久了？」', sec:'5"'}
+      ]},
+      { type:'mid', timeRange:'00:05–00:50', rows:[
+        {tc:'00:05', visual:'doctor', line:'「很多人以為坐一整天才叫久坐。錯！連續超過30分鐘不動，你的關節就開始承受額外壓力了。」', sec:'8"'},
+        {tc:'00:13', visual:'doctor', line:'「上班開車、辦公坐著、回家追劇還坐著。一天10小時跑不掉，下背不痠痛才怪。」', sec:'7"'},
+        {tc:'00:20', visual:'doctor', line:'「為什麼貼布沒效？因為關節軟骨沒有血管，它喝不到血。它只能靠你『動』產生的壓力，像海綿一樣吸取營養。你不動，軟骨就是被你活活餓壞的。」', sec:'12"'},
+        {tc:'00:32', visual:'doctor', line:'「就算你每天做家事30分鐘，只要其他時間久坐，身體還是會受影響。運動跟減少久坐，是兩件事。」', sec:'9"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'pause', line:'「所以，現在準備好離開椅子，陪你的軟骨『吃頓飯』了嗎？」', sec:'7"'},
+        {tc:'00:57', visual:'card', line:'【結尾字卡】華榮骨科 周世祥醫師｜高雄鼓山・PRP 再生注射・體外震波', sec:'3"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP03', title:'膝蓋痛！是退化？教你自我檢測法！',
+    doctor:'周世祥醫師', clinic:'華榮骨科（高雄鼓山）', style:'藏鏡人對話',
+    endCard:'華榮骨科 周世祥醫師｜高雄鼓山・PRP 再生注射・體外震波',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'全程觀念教育'},
+      {status:'ok',text:'自我檢測定位',note:'說明「只是觀察，不是診斷」'},
+      {status:'warn',text:'醫師請確認',note:'蹲下測試三個觀察點是否符合臨床描述'},
+      {status:'warn',text:'醫師請確認',note:'出鏡醫師請確認（標注黃暉程）'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:06', rows:[
+        {tc:'00:00', visual:'doctor', line:'（醫師走樓梯或做起立動作，突然停住看著鏡頭）「上下樓梯膝蓋會痛？先別嚇自己是退化！花15秒，跟我做這個測試。」', sec:'6"'}
+      ]},
+      { type:'mid', timeRange:'00:06–00:50', rows:[
+        {tc:'00:06', visual:'doctor', line:'（側身示範慢速深蹲，手扶椅背或牆壁｜大字幕：慢速深蹲測試）「雙腳打開，慢慢蹲到底再站起來。感受一下：你是動作卡住？還是特定位置會痛？」', sec:'9"'},
+        {tc:'00:15', visual:'doctor', line:'（指著膝蓋不同部位：側面、髕骨下方、後側）「如果是『特定角度』才痛、或按得到痛點，通常是韌帶或軟組織的問題；」', sec:'8"'},
+        {tc:'00:23', visual:'doctor', line:'「如果是覺得『膝蓋深層悶痛』、早上起床時最卡，這才比較偏向關節退化。」', sec:'7"'},
+        {tc:'00:30', visual:'card', line:'（畫面出現三個紅色打叉圖示：1.左右差太多 2.休息也痛 3.關節卡頓感）', sec:'—'},
+        {tc:'00:30', visual:'doctor', line:'「注意這三點：1. 左右感覺差太多、2. 休息時也會痛、3. 蹲下去關節有明顯卡頓感。只要中一個，就建議找專業評估。」', sec:'10"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'doctor', line:'（醫師站直，專業親切微笑）「了解膝蓋狀況，才不會白擔心。你蹲下時是什麼感覺？」', sec:'7"'},
+        {tc:'00:57', visual:'card', line:'【結尾字卡】華榮骨科 周世祥醫師｜高雄鼓山・PRP 再生注射・體外震波', sec:'3"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP04', title:'骨鬆是老人病？五十歲，你的骨頭正在悄悄流失',
+    doctor:'黃暉程醫師', clinic:'大興骨科（高雄三民）', style:'藏鏡人對話・熟齡版',
+    endCard:'大興骨科 黃暉程醫師｜高雄三民・骨骼老化，從現在開始管',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'全程以衛教知識帶出'},
+      {status:'ok',text:'DXA帶出方式',note:'以「醫學標準方式」定位，非廣告宣稱'},
+      {status:'ok',text:'無比較性語句',note:'已確認'},
+      {status:'warn',text:'醫師請確認',note:'「我們診所也有提供這項檢查」措辭是否符合您的習慣'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:12', rows:[
+        {tc:'00:00', visual:'doctor', line:'「你有沒有發現，最近背特別容易痠？」', sec:'3"'},
+        {tc:'00:03', visual:'doctor', line:'「或是量身高，發現自己好像矮了一點點？」', sec:'3"'},
+        {tc:'00:06', visual:'doctor', line:'「這些，不要只當成老化的正常現象。」', sec:'3"'},
+        {tc:'00:09', visual:'doctor', line:'「有可能是骨質已經在流失了。」', sec:'3"'}
+      ]},
+      { type:'mid', timeRange:'00:12–00:50', rows:[
+        {tc:'00:12', visual:'doctor', line:'「骨質疏鬆最可怕的地方，是它完全沒有症狀。」', sec:'5"'},
+        {tc:'00:17', visual:'doctor', line:'「很多人是摔一跤骨折，才發現骨頭早就出問題了。」', sec:'6"'},
+        {tc:'00:23', visual:'doctor', line:'「特別是女性在更年期前後，流失速度會明顯加快。」', sec:'6"'},
+        {tc:'00:29', visual:'card', line:'【帶到骨密度檢查室畫面】', sec:'—'},
+        {tc:'00:29', visual:'doctor', line:'「DXA骨密度檢查，是目前醫學上診斷骨質疏鬆的標準方式。」', sec:'7"'},
+        {tc:'00:36', visual:'doctor', line:'「我們診所也有提供這項檢查，讓你知道骨頭現在的狀況。」', sec:'7"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'doctor', line:'「五十歲開始注意，還有機會減緩流失的速度。」', sec:'5"'},
+        {tc:'00:55', visual:'pause', line:'（停頓）「你知道自己和家人的骨密度數字嗎？」', sec:'5"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP05', title:'當診評估、當診施打｜骨髓血注射在骨科的應用',
+    doctor:'沈煜庭醫師', clinic:'華榮骨科（高雄鼓山）', style:'醫師獨白・專業直接',
+    endCard:'華榮骨科 沈煜庭醫師｜高雄鼓山・PRP 再生注射・體外震波',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'以「啟動修復機制」描述，非直接療效'},
+      {status:'ok',text:'無「再生醫療」字眼',note:'已確認，規避法規風險'},
+      {status:'warn',text:'法規確認待辦',note:'BMA是否受再生醫療雙法管轄，建議發布前向衛福部醫事司確認'},
+      {status:'warn',text:'醫師請確認',note:'「髂骨抽取」說法是否符合實際操作位置'},
+      {status:'warn',text:'醫師請確認',note:'「生長因子和修復細胞」的描述是否符合您的臨床說法'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:14', rows:[
+        {tc:'00:00', visual:'doctor', line:'「很多人聽過PRP，但有一種療法，很多人還不太熟悉——叫做骨髓血注射。」', sec:'6"'},
+        {tc:'00:06', visual:'doctor', line:'「骨髓，是骨頭裡面的組織。裡面含有大量的生長因子和修復細胞。」', sec:'5"'},
+        {tc:'00:11', visual:'doctor', line:'「骨髓血注射，就是把這些修復物質，直接帶到受傷的部位。讓身體自己啟動修復的機制。」', sec:'6"'}
+      ]},
+      { type:'mid', timeRange:'00:14–00:50', rows:[
+        {tc:'00:14', visual:'doctor', line:'「很多人一聽到骨髓血，第一個反應是——那不是要抽龍骨嗎？很痛吧？不是的。」', sec:'6"'},
+        {tc:'00:20', visual:'doctor', line:'「我們抽取的位置是髂骨，就是你骨盆兩側的地方。用細針局部麻醉後抽取，過程大多數患者都能接受。跟你想像的，差很多。」', sec:'8"'},
+        {tc:'00:28', visual:'doctor', line:'「從患者自身抽取骨髓血，不經細胞培養，不需要等待。抽取之後，直接注射到病灶。」', sec:'7"'},
+        {tc:'00:35', visual:'doctor', line:'「整個過程在診間完成，當診評估，當診施打。」', sec:'4"'},
+        {tc:'00:39', visual:'doctor', line:'「適不適合這個療法，需要醫師評估。關節退化、肌腱損傷、長期保守治療效果有限的患者，可以來討論看看。」', sec:'8"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'doctor', line:'「骨髓血注射不是萬能，但它提供了一個不同的思考方向。」', sec:'5"'},
+        {tc:'00:55', visual:'pause', line:'「在手術之前，在放棄之前，值得跟醫師討論看看。」', sec:'5"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP06', title:'痛了好幾個月？可能是軟組織的問題',
+    doctor:'吳瑾俐醫師', clinic:'大興骨科（高雄三民）', style:'診間對話・專業直接',
+    endCard:'大興骨科 吳瑾俐醫師｜高雄三民・骨骼老化，從現在開始管',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'以「幫助組織進入修復狀態」描述'},
+      {status:'ok',text:'文獻依據',note:'「慢性疼痛=超過3個月」有IASP文獻支持'},
+      {status:'warn',text:'醫師請確認',note:'「高能量聲波」描述是否符合您的臨床說法習慣'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:12', rows:[
+        {tc:'00:00', visual:'doctor', line:'「很多人來找我，都說：醫師，我休息了、貼布也貼了、消炎藥也吃了，就是好不了。」', sec:'7"'},
+        {tc:'00:07', visual:'doctor', line:'「我通常第一個問題是：你這樣痛，超過三個月了嗎？如果是——光靠這些方法，可能不夠了。我們要換個方式來處理。」', sec:'8"'}
+      ]},
+      { type:'mid', timeRange:'00:12–00:50', rows:[
+        {tc:'00:12', visual:'doctor', line:'「可能是那個地方的組織，已經進入慢性狀態了。肌腱、筋膜在慢性發炎的狀態下，光靠休息和消炎藥，很難把修復機制重新打開。」', sec:'9"'},
+        {tc:'00:21', visual:'doctor', line:'「這個時候我會跟患者提到體外震波。用高能量的聲波，直接作用在受傷的部位。促進局部血液循環，幫助組織重新進入修復狀態。」', sec:'9"'},
+        {tc:'00:30', visual:'doctor', line:'「足底筋膜炎、網球肘、肩膀的肌腱問題，很常用到。」', sec:'5"'},
+        {tc:'00:35', visual:'doctor', line:'「在診間就能做，不需要開刀、不需要麻醉。做完可以正常走路，不影響生活。」', sec:'7"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'pause', line:'（停頓）「如果你的疼痛已經拖很久了——」', sec:'3"'},
+        {tc:'00:53', visual:'doctor', line:'「下次門診，可以跟醫師提這件事。」', sec:'4"'},
+        {tc:'00:57', visual:'card', line:'【結尾字卡】大興骨科 吳瑾俐醫師｜高雄三民', sec:'3"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP07', title:'打了PRP效果不如預期？先搞清楚這兩件事',
+    doctor:'沈煜庭醫師', clinic:'華榮骨科（高雄鼓山）', style:'診間對話',
+    endCard:'華榮骨科 沈煜庭醫師｜高雄鼓山・PRP 再生注射・體外震波',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'以「啟動修復過程」描述，非直接療效'},
+      {status:'ok',text:'無比較性語句',note:'未提及其他診所比較'},
+      {status:'warn',text:'醫師請確認',note:'「血小板濃度決定生長因子量」是否符合您的臨床描述'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:10', rows:[
+        {tc:'00:00', visual:'doctor', line:'「上週有個患者問我：醫師，我朋友打了PRP說沒什麼效，是不是根本沒用？」', sec:'6"'},
+        {tc:'00:06', visual:'doctor', line:'「我說——我先問你幾個問題，再告訴你答案。」', sec:'4"'}
+      ]},
+      { type:'mid', timeRange:'00:10–00:50', rows:[
+        {tc:'00:10', visual:'doctor', line:'「第一個問題：你知道PRP是做什麼的嗎？很多人以為PRP是止痛針，打下去就不痛了。不是的。」', sec:'7"'},
+        {tc:'00:17', visual:'doctor', line:'「PRP是在跟你的身體說：這裡需要修復，開始動作。所以它不是立刻見效，是啟動一個過程。這個過程，需要時間，也需要按療程來。」', sec:'9"'},
+        {tc:'00:26', visual:'doctor', line:'「第二個問題：你知道你朋友打的是什麼濃度嗎？PRP裡面的血小板濃度，決定了生長因子的量。量不夠，身體收到的訊號就弱，修復自然有限。同樣叫PRP，濃度可以差很多。」', sec:'11"'},
+        {tc:'00:37', visual:'doctor', line:'「所以我們在做PRP之前，一定先評估。這個患者適不適合、濃度怎麼設定、打哪個位置。不是每個人都一樣的流程。」', sec:'9"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'doctor', line:'「你朋友的經驗，不一定是你的經驗。先來讓我評估一下，再決定要不要做。」', sec:'6"'},
+        {tc:'00:56', visual:'doctor', line:'「PRP並不是每個人都適合，選對方向比跟風更重要。」', sec:'4"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP08', title:'五十肩不是五十歲才有！年輕人也中',
+    doctor:'吳瑾俐醫師', clinic:'大興骨科（高雄三民）', style:'醫師獨白・專業直接',
+    endCard:'大興骨科 吳瑾俐醫師｜高雄三民・骨骼老化，從現在開始管',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'治療以「整體照護」框架帶出'},
+      {status:'warn',text:'醫師請確認',note:'「二十幾歲最年輕案例」如屬個案分享，需確認是否符合醫療法規範'},
+      {status:'warn',text:'醫師請確認',note:'發炎沾黏進程描述是否符合您的臨床說法'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:10', rows:[
+        {tc:'00:00', visual:'doctor', line:'「五十肩，很多人以為是五十歲才會有的病。我門診看過最年輕的，二十幾歲。」', sec:'6"'},
+        {tc:'00:06', visual:'doctor', line:'「滑鼠手、長時間低頭、反覆抬手的工作——這些習慣，不需要等到五十歲，就能讓你的肩膀出問題。」', sec:'7"'}
+      ]},
+      { type:'mid', timeRange:'00:10–00:50', rows:[
+        {tc:'00:10', visual:'doctor', line:'「五十肩的本質，是肩關節囊發炎、沾黏。肩膀長期反覆使用、姿勢不良，關節囊開始發炎。」', sec:'7"'},
+        {tc:'00:17', visual:'doctor', line:'「發炎沒有好好處理，組織就開始沾黏、變硬。然後你會發現——手舉不起來、往後摸不到、晚上痛到睡不著。這個過程，可以發生在任何年齡。」', sec:'9"'},
+        {tc:'00:26', visual:'doctor', line:'「來門診，我會先評估活動角度，再用超音波看關節囊的狀況。確認是哪個階段，才能決定怎麼處理。」', sec:'7"'},
+        {tc:'00:33', visual:'doctor', line:'「依照每個人的階段和狀況，處理方式都不一樣。初期，我們通常會先從徒手治療開始。如果需要，再討論震波或注射型的輔助處置。」', sec:'9"'},
+        {tc:'00:42', visual:'doctor', line:'「這些都是整體照護的一部分，不是單一解法。實際怎麼安排，要評估過才能決定。」', sec:'6"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'doctor', line:'「肩膀舉不起來，不要等。越早處理，恢復的空間越大。」', sec:'5"'},
+        {tc:'00:55', visual:'card', line:'【結尾字卡】大興骨科 吳瑾俐醫師｜高雄三民', sec:'3"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP09', title:'不打網球也會得網球肘',
+    doctor:'沈煜庭醫師', clinic:'華榮骨科（高雄鼓山）', style:'藏鏡人對話・專業直接',
+    endCard:'華榮骨科 沈煜庭醫師｜高雄鼓山・PRP 再生注射・體外震波',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'已確認'},
+      {status:'ok',text:'類固醇說明',note:'以「醫師審慎評估」框架帶出，非否定'},
+      {status:'warn',text:'醫師請確認',note:'「肱骨外上髁附近不適」說法是否符合您的臨床描述習慣'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:10', rows:[
+        {tc:'00:00', visual:'hidden', line:'（藏鏡人）「醫師！我媽根本沒打過網球，為什麼也會得網球肘？」', sec:'4"'},
+        {tc:'00:04', visual:'doctor', line:'「其實『網球肘』這個名字很容易讓人誤會。在醫學上，不一定跟運動有關。」', sec:'5"'}
+      ]},
+      { type:'mid', timeRange:'00:10–00:50', rows:[
+        {tc:'00:10', visual:'doctor', line:'「這類手肘外側的不適，常見與重複性用力、抓握、提重物，或長時間使用手腕與前臂有關，像是做家事、搬東西、久用滑鼠，都可能出現類似情況。」', sec:'9"'},
+        {tc:'00:19', visual:'hidden', line:'（藏鏡人）「那痛起來，是不是打一針類固醇就好？」', sec:'4"'},
+        {tc:'00:23', visual:'doctor', line:'「類固醇在某些狀況下，可能會被醫師納入考量，但並不是每個人、每個階段都適合，是否使用仍需要由醫師審慎評估。」', sec:'8"'},
+        {tc:'00:31', visual:'doctor', line:'「在照護安排上，通常會分幾個方向：保護——先減少患處的反覆拉扯，護具是基本的。修復——徒手治療、震波、或注射型的介入，都是可能的選項。」', sec:'10"'},
+        {tc:'00:41', visual:'doctor', line:'「日後調整動作與使用習慣，作為後續保養方向。實際怎麼安排，仍需由醫師依個別狀況評估。」', sec:'7"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'doctor', line:'「網球肘不只是需要止痛，而是找到問題在哪、對應處理。」', sec:'5"'},
+        {tc:'00:55', visual:'doctor', line:'「這樣才能真正解決，不一直反覆發生。」', sec:'5"'}
+      ]}
+    ]
+  },
+  {
+    id:'EP10', title:'現代3C文明病！頸椎引起的肩頸痠痛',
+    doctor:'沈煜庭醫師', clinic:'骨立診所（台南永康）＋華榮骨科（高雄鼓山）', style:'藏鏡人對話・專業直接',
+    endCard:'華榮骨科 沈煜庭醫師｜高雄鼓山・PRP 增生療法・體外震波',
+    compliance:[
+      {status:'ok',text:'無療效宣稱',note:'已確認'},
+      {status:'ok',text:'兩間診所分工',note:'骨立（初評復健）→華榮（增生治療）自然帶出'},
+      {status:'warn',text:'醫師請確認',note:'兩間診所的分工說明是否符合實際運作'},
+      {status:'warn',text:'醫師請確認',note:'頸椎增生治療的適應症描述是否需要調整'}
+    ],
+    sections:[
+      { type:'front', timeRange:'00:00–00:10', rows:[
+        {tc:'00:00', visual:'hidden', line:'（藏鏡人）「醫師，我最近脖子很緊，而且有時候手會麻，這是怎麼了？」', sec:'4"'},
+        {tc:'00:04', visual:'doctor', line:'「手麻這個症狀，要認真看待。它通常不是肌肉的問題，而是神經在告訴你——某個地方壓到它了。」', sec:'6"'}
+      ]},
+      { type:'mid', timeRange:'00:10–00:50', rows:[
+        {tc:'00:10', visual:'doctor', line:'「原因因人而異。有些人是長期姿勢不良、肌肉過度緊繃。有些人是頸椎關節活動受限、神經受到刺激。同樣是肩頸不舒服，背後的原因可以差很多。」', sec:'9"'},
+        {tc:'00:19', visual:'doctor', line:'「這也是為什麼，有人推拿有效，有人推了還是沒用。」', sec:'4"'},
+        {tc:'00:23', visual:'doctor', line:'「你可以先做簡單的測試——慢慢轉頭、低頭、抬頭，看看哪個方向特別卡或不舒服。但這只是觀察方向，是否與頸椎有關，仍需要醫師進一步評估。」', sec:'9"'},
+        {tc:'00:32', visual:'doctor', line:'「門診會透過理學檢查和影像來判斷。多數狀況，我們先從姿勢調整和復健開始。」', sec:'6"'},
+        {tc:'00:38', visual:'doctor', line:'「如果症狀反覆、保守治療效果有限，再評估是否需要進一步的增生治療。每一步，都需要醫師完整評估後再決定。」', sec:'8"'}
+      ]},
+      { type:'end', timeRange:'00:50–01:00', rows:[
+        {tc:'00:50', visual:'note', line:'骨立診所可以進行初步評估與復健。若需頸椎神經增生治療，可到華榮骨科進一步評估。', sec:'—'},
+        {tc:'00:50', visual:'pause', line:'（停頓）「肩頸痠痛不只是累。找對原因，才能找對方法。」', sec:'5"'},
+        {tc:'00:55', visual:'card', line:'【結尾字卡】華榮骨科 沈煜庭醫師｜高雄鼓山・PRP 增生療法・體外震波', sec:'5"'}
+      ]}
+    ]
+  }
+];
+
+// ─── STATE ───
+const reviewState = {};
+allScripts.forEach(s => {
+  reviewState[s.id] = { verdict: null, lineComments: {}, sectionComments: { front:'', mid:'', end:'' } };
+});
+
+let currentDoctor = null;
+let currentScripts = [];
+
+// ─── VISUAL TAG ───
+function visualTag(type) {
+  const map = {
+    doctor: { cls:'vtag-doctor', label:'醫師' },
+    hidden: { cls:'vtag-hidden', label:'藏鏡人' },
+    pause:  { cls:'vtag-pause',  label:'停頓' },
+    card:   { cls:'vtag-card',   label:'字卡' },
+    note:   { cls:'vtag-note',   label:'補充說明' }
+  };
+  const v = map[type] || { cls:'vtag-doctor', label:type };
+  return `<span class="visual-tag ${v.cls}">${v.label}</span>`;
+}
+
+// ─── HOMEPAGE ───
+function buildHomepage() {
+  const grid = document.getElementById('doctor-grid');
+  doctors.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'doctor-card';
+    card.onclick = () => enterDoctor(d.id);
+    card.innerHTML = `
+      <div class="doctor-name">${d.name}</div>
+      <div class="doctor-clinic">${d.clinicFull}</div>
+      <div class="doctor-scripts-count">需審核 ${d.scripts.length} 支腳本</div>
+      <div class="doctor-script-tags">
+        ${d.scripts.map((ep,i) => `<span class="doctor-script-tag">${ep} ${d.scriptTitles[i]}</span>`).join('')}
+      </div>
+      <div class="doctor-enter-btn">
+        <span>進入審核</span>
+        <span>→</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function enterDoctor(docId) {
+  document.getElementById('float-report-btn').classList.add('visible');
+  currentDoctor = doctors.find(d => d.id === docId);
+  currentScripts = allScripts.filter(s => currentDoctor.scripts.includes(s.id));
+  document.getElementById('homepage').style.display = 'none';
+  const rp = document.getElementById('review-page');
+  rp.style.display = 'flex';
+  document.getElementById('topbar-title').textContent = '腳本審核';
+  document.getElementById('topbar-doctor').textContent = `${currentDoctor.name}・${currentDoctor.clinicFull}`;
+  document.getElementById('summary-doctor-name') && (document.getElementById('summary-doctor-name').textContent = currentDoctor.name);
+  buildReviewPage();
+  updateProgress();
+}
+
+function goHome() {
+  document.getElementById('float-report-btn').classList.remove('visible');
+  document.getElementById('review-page').style.display = 'none';
+  document.getElementById('homepage').style.display = 'flex';
+  document.getElementById('nav-list').innerHTML = '';
+  document.getElementById('scripts-container').innerHTML = '';
+}
+
+// ─── REVIEW PAGE ───
+function buildReviewPage() {
+  buildSidebar();
+  buildScripts();
+}
+
+function buildSidebar() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = '';
+  currentScripts.forEach(s => {
+    const a = document.createElement('a');
+    a.href = `#script-${s.id}`;
+    a.className = 'nav-item';
+    a.id = `nav-${s.id}`;
+    a.innerHTML = `
+      <span class="nav-ep">${s.id}</span>
+      <span class="nav-label">${s.title}</span>
+      <span class="nav-status" id="navs-${s.id}"></span>
+    `;
+    nav.appendChild(a);
+  });
+}
+
+function buildScripts() {
+  const container = document.getElementById('scripts-container');
+  container.innerHTML = '';
+  currentScripts.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'script-card';
+    card.id = `script-${s.id}`;
+
+    const complianceHtml = s.compliance.map(c => `
+      <div class="compliance-item">
+        <span class="compliance-icon">${c.status === 'ok' ? '✅' : '⚠️'}</span>
+        <span class="compliance-text">${c.text}</span>
+        <span class="compliance-note">${c.note}</span>
+      </div>
+    `).join('');
+
+    const sectionsHtml = s.sections.map(sec => buildSection(s.id, sec)).join('');
+
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="card-head-left">
+          <div class="card-ep-badge">${s.id}</div>
+          <div class="card-title">${s.title}</div>
+          <div class="card-tags">
+            <span class="card-tag">👨‍⚕️ ${s.doctor}</span>
+            <span class="card-tag">🏥 ${s.clinic}</span>
+            <span class="card-tag">⏱ 60秒</span>
+            <span class="card-tag">🎬 ${s.style}</span>
+          </div>
+        </div>
+        <div class="card-verdict" id="verdict-badge-${s.id}">待審核</div>
+      </div>
+
+      ${sectionsHtml}
+
+      <div class="end-card-section">
+        <div class="end-card-label">結尾字卡</div>
+        <div class="end-card-content">${s.endCard}</div>
+      </div>
+
+      <div class="compliance-section">
+        <div class="compliance-title">合規確認 ＋ 醫師檢視重點</div>
+        <div class="compliance-list">${complianceHtml}</div>
+      </div>
+
+      <div class="verdict-section">
+        <div class="verdict-title">審核結果</div>
+        <div class="verdict-choices">
+          <div class="verdict-choice" id="vc-${s.id}-pass" onclick="selectVerdict('${s.id}','pass')">
+            <div class="verdict-choice-icon">✅</div>
+            <div class="verdict-choice-label">PASS</div>
+            <div class="verdict-choice-sub">確認無誤，可拍攝</div>
+          </div>
+          <div class="verdict-choice" id="vc-${s.id}-revise" onclick="selectVerdict('${s.id}','revise')">
+            <div class="verdict-choice-icon">⚠️</div>
+            <div class="verdict-choice-label">REVISE</div>
+            <div class="verdict-choice-sub">部分需修改</div>
+          </div>
+          <div class="verdict-choice" id="vc-${s.id}-reject" onclick="selectVerdict('${s.id}','reject')">
+            <div class="verdict-choice-icon">❌</div>
+            <div class="verdict-choice-label">REJECT</div>
+            <div class="verdict-choice-sub">需要重寫</div>
+          </div>
+        </div>
+        <div class="verdict-submit">
+          <button class="submit-btn" id="submit-${s.id}" onclick="submitVerdict('${s.id}')" disabled>提交審核</button>
+          <div class="submit-confirm" id="confirm-${s.id}"><span></span></div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Intersection observer
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id.replace('script-','');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const nav = document.getElementById(`nav-${id}`);
+        if (nav) nav.classList.add('active');
+      }
+    });
+  }, { threshold: 0.15 });
+  currentScripts.forEach(s => {
+    const el = document.getElementById(`script-${s.id}`);
+    if (el) obs.observe(el);
+  });
+}
+
+function buildSection(scriptId, sec) {
+  const typeMap = { front:'前段', mid:'中段', end:'後段' };
+  const pipClass = { front:'front-pip', mid:'mid-pip', end:'end-pip' }[sec.type];
+  const titleClass = { front:'front-title', mid:'mid-title', end:'end-title' }[sec.type];
+
+  const rowsHtml = sec.rows.map((row, ri) => {
+    const rowId = `${scriptId}-${sec.type}-${ri}`;
+    const lineClass = row.visual === 'hidden' ? 'line-hidden' : row.visual === 'note' ? 'line-note' : '';
+    return `
+      <tr>
+        <td class="td-timecode">${row.tc}</td>
+        <td class="td-visual">${visualTag(row.visual)}</td>
+        <td class="td-line"><span class="${lineClass}">${row.line}</span></td>
+        <td class="td-sec">${row.sec}</td>
+        <td class="td-comment-btn">
+          <button class="comment-trigger" id="ctrigger-${rowId}" onclick="toggleLineComment('${rowId}')" title="新增批注">💬</button>
+        </td>
+      </tr>
+      <tr class="inline-comment-row" id="icomment-${rowId}">
+        <td colspan="5" class="inline-comment-cell">
+          <div class="inline-comment-inner">
+            <div class="inline-comment-label">批注</div>
+            <textarea class="inline-comment-field" placeholder="請輸入此行的修改意見..." rows="2"
+              onchange="saveLineComment('${scriptId}','${sec.type}','${ri}',this.value)"
+              oninput="saveLineComment('${scriptId}','${sec.type}','${ri}',this.value)"></textarea>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // Mobile card HTML
+  const cardsHtml = sec.rows.map((row, ri) => {
+    const rowId = `${scriptId}-${sec.type}-${ri}`;
+    const lineClass = row.visual === 'hidden' ? 'line-hidden' : row.visual === 'note' ? 'line-note' : '';
+    return `
+      <div class="row-card">
+        <div class="row-card-meta">
+          <span class="row-card-tc">${row.tc}</span>
+          ${visualTag(row.visual)}
+          <span class="row-card-sec">${row.sec}</span>
+        </div>
+        <div class="row-card-line ${lineClass}">${row.line}</div>
+        <button class="row-card-comment-btn" id="mctrigger-${rowId}" onclick="toggleMobileComment('${rowId}')">💬 批注此行</button>
+        <div class="row-card-comment-area" id="mcomment-${rowId}">
+          <div class="row-card-comment-inner">
+            <div class="row-card-comment-label">批注</div>
+            <textarea class="row-card-comment-field" placeholder="請輸入此行的修改意見..."
+              oninput="saveMobileComment('${scriptId}','${sec.type}','${ri}',this.value)"></textarea>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="script-section-wrap">
+      <div class="section-header">
+        <span class="section-pip ${pipClass}"></span>
+        <span class="section-title ${titleClass}">${typeMap[sec.type]}</span>
+        <span class="section-time">${sec.timeRange}</span>
+        <span class="section-comment-count" id="sec-count-${scriptId}-${sec.type}"></span>
+      </div>
+      <table class="breakdown-table">
+        <thead>
+          <tr>
+            <th class="th-timecode">時間碼</th>
+            <th class="th-visual">畫面</th>
+            <th class="th-line">台詞</th>
+            <th class="th-sec">秒數</th>
+            <th class="th-comment"></th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+      <div class="script-row-card">${cardsHtml}</div>
+      <div class="section-comment-area">
+        <div class="section-comment-label">${typeMap[sec.type]} 整體意見</div>
+        <textarea class="section-comment-field" placeholder="對此段落的整體修改建議..." rows="2"
+          onchange="saveSectionComment('${scriptId}','${sec.type}',this.value)"
+          oninput="saveSectionComment('${scriptId}','${sec.type}',this.value)"></textarea>
+      </div>
+    </div>
+  `;
+}
+
+function toggleMobileComment(rowId) {
+  const area = document.getElementById(`mcomment-${rowId}`);
+  const btn = document.getElementById(`mctrigger-${rowId}`);
+  const isOpen = area.classList.contains('open');
+  area.classList.toggle('open');
+  if (!isOpen) area.querySelector('textarea').focus();
+}
+
+function saveMobileComment(scriptId, secType, rowIdx, val) {
+  const key = `${secType}-${rowIdx}`;
+  reviewState[scriptId].lineComments[key] = val;
+  const rowId = `${scriptId}-${secType}-${rowIdx}`;
+  const btn = document.getElementById(`mctrigger-${rowId}`);
+  if (btn) btn.classList.toggle('has-comment', val.trim().length > 0);
+  // also sync desktop trigger if exists
+  const dBtn = document.getElementById(`ctrigger-${rowId}`);
+  if (dBtn) dBtn.classList.toggle('has-comment', val.trim().length > 0);
+  updateSectionCount(scriptId, secType);
+}
+
+function toggleLineComment(rowId) {
+  const row = document.getElementById(`icomment-${rowId}`);
+  const btn = document.getElementById(`ctrigger-${rowId}`);
+  const isOpen = row.classList.contains('open');
+  row.classList.toggle('open');
+  if (!isOpen) { row.querySelector('textarea').focus(); }
+}
+
+function saveLineComment(scriptId, secType, rowIdx, val) {
+  const key = `${secType}-${rowIdx}`;
+  reviewState[scriptId].lineComments[key] = val;
+  const rowId = `${scriptId}-${secType}-${rowIdx}`;
+  const btn = document.getElementById(`ctrigger-${rowId}`);
+  if (btn) btn.classList.toggle('has-comment', val.trim().length > 0);
+  updateSectionCount(scriptId, secType);
+}
+
+function saveSectionComment(scriptId, secType, val) {
+  reviewState[scriptId].sectionComments[secType] = val;
+}
+
+function updateSectionCount(scriptId, secType) {
+  const keys = Object.keys(reviewState[scriptId].lineComments).filter(k => k.startsWith(secType) && reviewState[scriptId].lineComments[k].trim());
+  const el = document.getElementById(`sec-count-${scriptId}-${secType}`);
+  if (el) el.textContent = keys.length > 0 ? `${keys.length} 則批注` : '';
+}
+
+function selectVerdict(scriptId, verdict) {
+  reviewState[scriptId].verdict = verdict;
+  ['pass','revise','reject'].forEach(v => {
+    const el = document.getElementById(`vc-${scriptId}-${v}`);
+    el.className = 'verdict-choice' + (v === verdict ? ` sel-${v}` : '');
+  });
+  document.getElementById(`submit-${scriptId}`).disabled = false;
+  document.getElementById(`confirm-${scriptId}`).style.display = 'none';
+}
+
+function submitVerdict(scriptId) {
+  const v = reviewState[scriptId].verdict;
+  if (!v) return;
+  const labels = { pass:'✅ PASS — 確認無誤', revise:'⚠️ REVISE — 需要修改', reject:'❌ REJECT — 需要重寫' };
+  const badge = document.getElementById(`verdict-badge-${scriptId}`);
+  badge.textContent = labels[v].split(' — ')[0].replace(/[✅⚠️❌]\s/,'').trim();
+  badge.className = `card-verdict ${v}`;
+  const confirm = document.getElementById(`confirm-${scriptId}`);
+  confirm.className = `submit-confirm ${v}`;
+  confirm.style.display = 'flex';
+  confirm.querySelector('span').textContent = labels[v];
+  document.getElementById(`submit-${scriptId}`).disabled = true;
+  const ns = document.getElementById(`navs-${scriptId}`);
+  if (ns) ns.textContent = v === 'pass' ? '✅' : v === 'revise' ? '⚠️' : '❌';
+  updateProgress();
+  const idx = currentScripts.findIndex(s => s.id === scriptId);
+  if (idx < currentScripts.length - 1) {
+    setTimeout(() => {
+      document.getElementById(`script-${currentScripts[idx+1].id}`).scrollIntoView({behavior:'smooth',block:'start'});
+    }, 500);
+  }
+}
+
+function generateReport() {
+  const lines = [];
+  lines.push('═══════════════════════════');
+  lines.push('腳本審核回饋報告');
+  lines.push(`醫師：${currentDoctor.name}`);
+  lines.push(`診所：${currentDoctor.clinicFull}`);
+  lines.push(`日期：${new Date().toLocaleDateString('zh-TW')}`);
+  lines.push('═══════════════════════════');
+  lines.push('');
+
+  currentScripts.forEach(s => {
+    const st = reviewState[s.id];
+    const verdictLabel = st.verdict
+      ? { pass:'✅ PASS', revise:'⚠️ REVISE', reject:'❌ REJECT' }[st.verdict]
+      : '⏳ 待審核';
+
+    lines.push(`【${s.id}】${s.title}`);
+    lines.push(`審核結果：${verdictLabel}`);
+
+    // Section comments
+    const secLabels = { front:'前段', mid:'中段', end:'後段' };
+    Object.entries(st.sectionComments).forEach(([sec, comment]) => {
+      if (comment.trim()) {
+        lines.push(`${secLabels[sec]}意見：${comment.trim()}`);
+      }
+    });
+
+    // Line comments
+    const lineKeys = Object.keys(st.lineComments).filter(k => st.lineComments[k].trim());
+    if (lineKeys.length > 0) {
+      lines.push('逐行批注：');
+      lineKeys.forEach(key => {
+        const [secType, rowIdx] = key.split('-');
+        const sec = currentScripts.find(sc => sc.id === s.id);
+        const section = sec ? sec.sections.find(se => se.type === secType) : null;
+        if (section && section.rows[parseInt(rowIdx)]) {
+          const rowLine = section.rows[parseInt(rowIdx)].line;
+          const short = rowLine.length > 22 ? rowLine.substring(0, 22) + '...' : rowLine;
+          lines.push(`  ・「${short}」`);
+          lines.push(`    → ${st.lineComments[key].trim()}`);
+        }
+      });
+    }
+    lines.push('───────────────────────────');
+    lines.push('');
+  });
+
+  // Stats
+  const pass = currentScripts.filter(s => reviewState[s.id].verdict === 'pass').length;
+  const revise = currentScripts.filter(s => reviewState[s.id].verdict === 'revise').length;
+  const reject = currentScripts.filter(s => reviewState[s.id].verdict === 'reject').length;
+  const pending = currentScripts.filter(s => !reviewState[s.id].verdict).length;
+  lines.push(`總計：PASS ${pass} 支｜REVISE ${revise} 支｜REJECT ${reject} 支｜待審 ${pending} 支`);
+  lines.push('═══════════════════════════');
+
+  const reportText = lines.join('\n');
+  document.getElementById('report-text').value = reportText;
+  document.getElementById('report-modal').style.display = 'flex';
+  document.getElementById('float-report-btn').style.display = 'none';
+}
+
+function closeReport() {
+  document.getElementById('report-modal').style.display = 'none';
+  document.getElementById('float-report-btn').style.display = '';
+}
+
+function copyReport() {
+  const text = document.getElementById('report-text').value;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-report-btn');
+    btn.textContent = '✅ 已複製';
+    btn.style.background = '#1e7a4a';
+    setTimeout(() => {
+      btn.textContent = '📋 複製回饋';
+      btn.style.background = '';
+    }, 2000);
+  });
+}
+
+function updateProgress() {
+  const pass = currentScripts.filter(s => reviewState[s.id].verdict === 'pass').length;
+  const revise = currentScripts.filter(s => reviewState[s.id].verdict === 'revise').length;
+  const reject = currentScripts.filter(s => reviewState[s.id].verdict === 'reject').length;
+  const done = pass + revise + reject;
+  document.getElementById('stat-pass').textContent = pass;
+  document.getElementById('stat-revise').textContent = revise;
+  document.getElementById('stat-reject').textContent = reject;
+  document.getElementById('progress-text').textContent = `已完成 ${done} / ${currentScripts.length}`;
+  document.getElementById('progress-fill').style.width = `${(done/currentScripts.length)*100}%`;
+}
+
+buildHomepage();
+</script>
+<!-- FLOATING REPORT BUTTON -->
+<button class="float-report-btn" id="float-report-btn" onclick="generateReport()">
+  📤 產生回饋報告
+</button>
+
+<!-- REPORT MODAL -->
+<div id="report-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:1000;flex-direction:column;">
+  <div style="padding:14px 16px;border-bottom:1px solid #e0ddd8;display:flex;align-items:center;justify-content:space-between;background:#fff;flex-shrink:0;">
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#6a7070;margin-bottom:2px;">REVIEW REPORT</div>
+      <div style="font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:#1a1e1e;">審核回饋報告</div>
+    </div>
+    <button onclick="closeReport()" style="width:34px;height:34px;border-radius:50%;border:1px solid #e0ddd8;background:#f6f5f2;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✕</button>
+  </div>
+  <div style="padding:10px 16px;background:#f0faf8;border-bottom:1px solid #b2ddd8;flex-shrink:0;">
+    <div style="font-size:13px;color:#1a7a6e;font-weight:500;">📤 複製後傳給靖宜</div>
+  </div>
+  <textarea id="report-text" readonly style="flex:1;padding:16px;font-size:14px;font-family:monospace;line-height:1.9;border:none;outline:none;resize:none;color:#1a1e1e;background:#fafaf8;overflow-y:auto;-webkit-overflow-scrolling:touch;"></textarea>
+  <div style="padding:14px 16px;border-top:1px solid #e0ddd8;display:flex;gap:10px;background:#fff;flex-shrink:0;safe-area-inset-bottom:env(safe-area-inset-bottom);">
+    <button onclick="closeReport()" style="flex:1;padding:12px;border:1px solid #e0ddd8;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;color:#6a7070;font-weight:600;">關閉</button>
+    <button id="copy-report-btn" onclick="copyReport()" style="flex:2;padding:12px;background:#1a7a6e;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:background 0.15s;">📋 複製回饋</button>
+  </div>
+</div>
+
+</body>
+</html>
