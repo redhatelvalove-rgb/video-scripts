@@ -1608,14 +1608,15 @@ buildHomepage();
     const text = document.getElementById('report-text').value;
     if (!text) return;
 
+    // --- 簡化版同步邏輯，不容易出錯 ---
+    const formData = new FormData();
+    formData.append('report', text); // 直接把回饋內容裝進包裹
+
     fetch(scriptURL, {
       method: 'POST',
       mode: 'no-cors',
-       body: new FormData(Object.assign(document.createElement('form'), {
-        innerHTML:` <input name="report" value="${text.replace(/"/g, '&quot;')}">`
-    }))
+      body: formData
     }).catch(e => console.error('同步失敗', e));
-  });
 </script>
 </body>
 </html>
